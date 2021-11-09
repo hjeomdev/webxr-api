@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGL: Canvas Context</title>
+    <style>
+        canvas {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+<script type="text/javascript">
+    const canvas = document.querySelector("#canvas");
+    
+    const gl = canvas.getContext('webgl'); // WebGLRenderingContext 인터페이스(브라우저가 WebGL 라이브러리 접근) 가져오기
+    if(!gl) {
+        console.log('WebGL unavailable');
+    } else {
+        console.log('WebGL is good to go');
+    }
+
+    gl.clearColor(1, 0, 0, 1); // Red, Green, Blue, Transparency
+    gl.clear(gl.COLOR_BUFFER_BIT); // clearColor() 에 정의된 값으로 캔버스 색상 재설정
+</script>
+</html>
