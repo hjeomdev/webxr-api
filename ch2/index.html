@@ -106,7 +106,8 @@
 
     // 화면에 점 그리기
     // const mode = gl.TRIANGLE; // 3점을 연결해서 삼각형
-    const mode = gl.TRIANGLE_STRIP; // 2개 이전의 점을 연결해서 만들어진 삼각형의 스트립 형성
+    // const mode = gl.TRIANGLE_STRIP; // 2개 이전의 점을 연결해서 만들어진 삼각형의 스트립 형성
+    const mode = gl.LINE_LOOP; // 각 정점을 연결하고 마지막 정점을 첫 번째 정점과 연결한 직사각형 윤곽
     const first = 0;
     const count = 4;
     gl.drawArrays(mode, first, count);
