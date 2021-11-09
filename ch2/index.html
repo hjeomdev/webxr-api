@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebGL: Canvas Context</title>
     <style>
@@ -15,6 +14,22 @@
 </head>
 <body>
     <canvas id="canvas"></canvas>
+    <!-- <WebGL 렌더링 콘텍스트에 대한 정점 셰이더 정의> -->
+    <script id="vertex-data" type="not-javascript">
+        attribute vec4 vertex_points; 
+
+        void main() {
+            gl_Position = vertex_points;
+        }
+    </script>
+    <!-- 셰이더 작업에 필요한 메모리 양을 GPU에게 알려줌 -->
+    <script id="fragment-data" type="not-javascript">
+        precision mediump float; 
+
+        void main() {
+            gl_FragColor = vec4(1, 0, 0, 1.0);
+        }
+    </script>
 </body>
 <script type="text/javascript">
     const canvas = document.querySelector("#canvas");
@@ -25,8 +40,75 @@
     } else {
         console.log('WebGL is good to go');
     }
+    console.log(gl.drawingBufferWidth);
+    console.log(gl.drawingBufferHeight);
+    console.log(gl);
 
-    gl.clearColor(1, 0, 0, 1); // Red, Green, Blue, Transparency
-    gl.clear(gl.COLOR_BUFFER_BIT); // clearColor() 에 정의된 값으로 캔버스 색상 재설정
+    // gl.clearColor(1, 0, 0, 1); // Red, Green, Blue, Transparency
+    // gl.clear(gl.COLOR_BUFFER_BIT); // clearColor() 에 정의된 값으로 캔버스 색상 재설정
+    
+    const coordinates = [ // 정점 위치
+        -0.7, 0.7,
+        0.7, 0.7,
+        // -0.7, 0,
+        0.7, 0,
+    ];
+
+    /*===== 버퍼 =====*/
+
+    const pointsBuffer = gl.createBuffer(); // 정점을 저장할 빈 버퍼 객체 생성
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, pointsBuffer); // 빈 버퍼 객체를 GL 콘텍스트에 연결
+    
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(coordinates), gl.STATIC_DRAW); // 정점을 GL의 연결된 버퍼에 로드 // (float요소 배열을 컴퓨터 수학 연산에 최적화된 32비트 float 값의 배열로 캐스팅, STATIC_DRAW: 버퍼의 데이터가 두번 이상 수정되지 않으며 브라우저 창에 그려져야 한다고 GPU에게 알림)
+
+    /*===== 셰이더 =====*/
+
+    const vsSource = document.querySelector("#vertex-data").text; // 정점 셰이더 데이터 저장을 위한 변수 생성
+    const fsSource = document.querySelector("#fragment-data").text; // 조각 셰이더에서 데이터를 저장할 변수 생성
+
+    // 셰이더를 GSLS로 컴파일
+    const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+    gl.shaderSource(vertexShader, vsSource);
+    gl.compileShader(vertexShader);
+    const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+    gl.shaderSource(fragmentShader, fsSource);
+    gl.compileShader(fragmentShader);
+
+    const program = gl.createProgram(); // 셰이더 가능을 GPU에 전달하는 운반 컨테이너 생성
+
+    // 셰이더 부착
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+
+    gl.linkProgram(program); // 셰이더 연결
+
+    gl.useProgram(program);
+
+    /*===== 셰이더와 버퍼 연결 =====*/
+    const pointsAttributeLocation = gl.getAttribLocation(program, "vertex_points"); // 프로그램의 정점 셰이더 소스에서 특성 찾기
+
+    // 속성을 현재 버퍼 객체에 있는 포인트 데이터에 연결한다.
+    let size = 2; // 요소당 반복 횟수(x, y 포인트 감안)
+    let type = gl.FLOAT; // 데이터는 32비트 floats
+    let normalize = false;
+    let stride = 0; // 쌍 좌표 사이의 인덱스를 건너뛰지 않음
+    let offset = 0; // 버퍼 처음부터 시작
+    gl.vertexAttribPointer(pointsAttributeLocation, size, type, normalize, stride, offset); 
+    
+    gl.enableVertexAttribArray(pointsAttributeLocation); // 포인트 데이터를 GPU에 보낸다
+
+    /*===== 그리기 =====*/
+
+    gl.clearColor(0, 0, 0, 0); // 캔버스 지우기
+    
+    gl.clear(gl.COLOR_BUFFER_BIT); // 새 페인트의 색 버퍼 지우기
+
+    // 화면에 점 그리기
+    const mode = gl.TRIANGLES;
+    const first = 0;
+    const count = 3;
+    gl.drawArrays(mode, first, count);
+
 </script>
 </html>
