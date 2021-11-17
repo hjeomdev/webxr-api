@@ -78,9 +78,15 @@ function main() {
     planeTextureMap.repeat.set(16, 16);
     planeTextureMap.minFilter = THREE.NearestFilter;
     planeTextureMap.anisotropy = gl.getMaxAnisotropy();
-    const planeMaterial = new THREE.MeshLambertMaterial({
+    const planeNorm = textureLoader.load('textures/pebbles_normal.png');
+    planeNorm.wrapS = THREE.RepeatWrapping;
+    planeNorm.wrapT = THREE.RepeatWrapping;
+    planeNorm.minFilter = THREE.NearestFilter;
+    planeNorm.repeat.set(16, 16);
+    const planeMaterial = new THREE.MeshStandardMaterial({
         map: planeTextureMap,
-        side: THREE.DoubleSide
+        side: THREE.DoubleSide,
+        normalMap: planeNorm 
     });
 
     // MESHES
