@@ -48,6 +48,12 @@ function main() {
 
     // drawing
     function draw() {
+        if(resizeGLToDisplaySize(gl)) {
+            const canvas = gl.domElement;
+            camera.aspect = canvas.clientWidth / canvas.clientHeight;
+            camera.updateProjectionMatrix();
+        }
+        
         cube.rotation.x += 0.01;
         cube.rotation.y += 0.01;       
         cube.rotation.z += 0.01;
@@ -58,4 +64,16 @@ function main() {
 
     requestAnimationFrame(draw);
 
+}
+
+function resizeGLToDisplaySize(gl) {
+    const canvas = gl.domElement;
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+
+    const needResize = canvas.width != width || canvas.height != height;
+    if(needResize) {
+        gl.setSize(width, height, false);
+    }
+    return needResize;
 }
