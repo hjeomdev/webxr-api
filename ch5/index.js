@@ -112,6 +112,11 @@ function main() {
     light.target = plane;
     scene.add(light.target);
 
+    const ambientColor = 0xffffff;
+    const ambientIntensity = 0.2;
+    const ambientLight = new THREE.AmbientLight(ambientColor, ambientIntensity);
+    scene.add(ambientLight);
+
     // drawing
     function draw() {
         if(resizeGLToDisplaySize(gl)) {
