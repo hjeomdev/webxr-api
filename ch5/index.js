@@ -118,7 +118,9 @@ function main() {
     scene.add(ambientLight);
 
     // drawing
-    function draw() {
+    function draw(time) {
+        time *= 0.001;
+
         if(resizeGLToDisplaySize(gl)) {
             const canvas = gl.domElement;
             camera.aspect = canvas.clientWidth / canvas.clientHeight;
@@ -133,6 +135,8 @@ function main() {
         sphere.rotation.y += 0.01;       
         sphere.rotation.z += 0.01;
 
+        light.position.x = 20 * Math.cos(time);
+        light.position.y = 20 * Math.sin(time);
         gl.render(scene, camera);
         requestAnimationFrame(draw);
     }
