@@ -27,6 +27,9 @@ function main() {
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0.3, 0.5, 0.8);
 
+    const fog = new THREE.Fog("gray", 1, 100);
+    scene.fog = fog;
+
     // GEOMETRY
     // create the cube
     const cubeSize = 4;
