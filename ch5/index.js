@@ -1,6 +1,7 @@
 import * as THREE from './modules/three.module.js';
 
 main();
+
 function main() {
     // create a context
     const canvas = document.querySelector("#c");
@@ -25,6 +26,7 @@ function main() {
     // create the scene
     const scene = new THREE.Scene();
 
+    // GEOMETRY
     // create the cube
     const cubeSize = 4;
     const cubeGeometry = new THREE.BoxGeometry(
@@ -32,19 +34,62 @@ function main() {
         cubeSize, // height of cube
         cubeSize // depth of cube
     );
+
+    // create the sphere
+    const sphereRadius = 3;
+    const sphereWidthSegment = 32;
+    const sphereHeightSegments = 16;
+    const sphereGeometry = new THREE.SphereGeometry(
+        sphereRadius,
+        sphereWidthSegment,
+        sphereHeightSegments
+    )
+
+    // create the upright plane
+    const planeWidth = 256;
+    const planeHeight = 128;
+    const planeGeometry = new THREE.PlaneGeometry(
+        planeWidth,
+        planeHeight
+    );
+
+    // MATERIALS
     const cubeMaterial = new THREE.MeshPhongMaterial({
         color: 'pink'
     })
+    const sphereMaterial = new THREE.MeshLambertMaterial({
+        color: 'tan'
+    });
 
+    const textureLoader = new THREE.TextureLoader();
+    const planeTextureMap = textureLoader.load('./textures/pebbles.jpg');
+    const planeMaterial = new THREE.MeshLambertMaterial({
+        map: planeTextureMap,
+        side: THREE.DoubleSide
+    })
+
+    // MESHES
     const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
     cube.position.set(cubeSize + 1, cubeSize + 1, 0);
     scene.add(cube);
 
-    // create the light
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    sphere.position.set(-sphereRadius - 1, sphereRadius + 2, 0);
+    scene.add(sphere);
+
+    const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+    plane.rotation.x = Math.PI / 2;
+    scene.add(plane);
+
+    // LIGHTS
     const color = 0xffffff;
     const intensity = 1;
     const light = new THREE.DirectionalLight(color, intensity);
+    light.position.set(0, 30, 30);
     scene.add(light);
+
+    light.target = plane;
+    scene.add(light.target);
 
     // drawing
     function draw() {
@@ -57,6 +102,10 @@ function main() {
         cube.rotation.x += 0.01;
         cube.rotation.y += 0.01;       
         cube.rotation.z += 0.01;
+
+        sphere.rotation.x += 0.01;
+        sphere.rotation.y += 0.01;       
+        sphere.rotation.z += 0.01;
 
         gl.render(scene, camera);
         requestAnimationFrame(draw);
