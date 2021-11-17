@@ -63,7 +63,7 @@ function main() {
     })
 
     const textureLoader = new THREE.TextureLoader();
-    
+
     const sphereNormalMap = textureLoader.load('./textures/sphere_normal.png');
     sphereNormalMap.wrapS = THREE.RepeatWrapping;
     sphereNormalMap.wrapT = THREE.RepeatWrapping;
@@ -73,7 +73,11 @@ function main() {
     });
 
     const planeTextureMap = textureLoader.load('./textures/pebbles.jpg');
-    const planeMaterial = new THREE.MeshStandardMaterial({
+    planeTextureMap.wrapS = THREE.RepeatWrapping;
+    planeTextureMap.wrapT = THREE.RepeatWrapping;
+    planeTextureMap.repeat.set(16, 16);
+
+    const planeMaterial = new THREE.MeshLambertMaterial({
         map: planeTextureMap,
         side: THREE.DoubleSide
     });
