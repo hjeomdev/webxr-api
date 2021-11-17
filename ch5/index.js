@@ -77,6 +77,7 @@ function main() {
     planeTextureMap.wrapT = THREE.RepeatWrapping;
     planeTextureMap.repeat.set(16, 16);
     planeTextureMap.minFilter = THREE.NearestFilter;
+    planeTextureMap.anisotropy = gl.getMaxAnisotropy();
     const planeMaterial = new THREE.MeshLambertMaterial({
         map: planeTextureMap,
         side: THREE.DoubleSide
