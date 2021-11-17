@@ -25,6 +25,7 @@ function main() {
 
     // create the scene
     const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0.3, 0.5, 0.8);
 
     // GEOMETRY
     // create the cube
