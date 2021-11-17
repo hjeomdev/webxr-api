@@ -61,16 +61,22 @@ function main() {
     const cubeMaterial = new THREE.MeshPhongMaterial({
         color: 'pink'
     })
-    const sphereMaterial = new THREE.MeshLambertMaterial({
-        color: 'tan'
-    });
 
     const textureLoader = new THREE.TextureLoader();
+    
+    const sphereNormalMap = textureLoader.load('./textures/sphere_normal.png');
+    sphereNormalMap.wrapS = THREE.RepeatWrapping;
+    sphereNormalMap.wrapT = THREE.RepeatWrapping;
+    const sphereMaterial = new THREE.MeshStandardMaterial({
+        color: 'tan',
+        normalMap: sphereNormalMap
+    });
+
     const planeTextureMap = textureLoader.load('./textures/pebbles.jpg');
-    const planeMaterial = new THREE.MeshLambertMaterial({
+    const planeMaterial = new THREE.MeshStandardMaterial({
         map: planeTextureMap,
         side: THREE.DoubleSide
-    })
+    });
 
     // MESHES
     const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
